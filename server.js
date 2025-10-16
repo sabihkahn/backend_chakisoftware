@@ -5,7 +5,7 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 const allowedOrigins = [
-  "http://localhost:5173", // for local dev
+  "https://chakisoftware.netlify.app/", // for local dev
   "https://frontend-chakisoftware.vercel.app", // your deployed frontend domain
 ];
 
