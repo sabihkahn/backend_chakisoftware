@@ -1,10 +1,20 @@
-import express from "express";
+import express, { urlencoded } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173", // for local dev
+  "https://frontend-chakisoftware.vercel.app", // your deployed frontend domain
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
+app.use(express.urlencoded({ extended: true }));
 
 // ------------------ DB CONNECTION ------------------
 mongoose
