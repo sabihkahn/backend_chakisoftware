@@ -92,7 +92,10 @@ app.get("/api/orders/pending", async (req, res) => {
   const orders = await Order.find({ status: "pending" });
   res.json(orders);
 });
-
+app.get("/api/orders/completed", async (req, res) => {
+  const orders = await Order.find({ status: "completed" });
+  res.json(orders);
+});
 // Confirm a pending order
 app.put("/api/order/confirm/:id", async (req, res) => {
   try {
