@@ -9,11 +9,7 @@ const allowedOrigins = [
   "https://frontend-chakisoftware.vercel.app", // your deployed frontend domain
 ];
 
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-}));
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // ------------------ DB CONNECTION ------------------
