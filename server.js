@@ -180,5 +180,15 @@ app.get("/api/sales", async (req, res) => {
   const sales = await Sale.find().sort({ date: -1 });
   res.json(sales);
 });
+app.get('/alldata', async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ date: -1 });
+   
 
+    res.json({ orders});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+);
 export default app;
