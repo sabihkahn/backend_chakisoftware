@@ -145,6 +145,3 @@ app.get("/api/sales", async (req, res) => {
     res.json(sales);
 });
 
-// ------------------ START SERVER ------------------
-const PORT = 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
