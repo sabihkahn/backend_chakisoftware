@@ -92,7 +92,7 @@ app.get("/api/orders/pending", async (req, res) => {
   const orders = await Order.find({ status: "pending" });
   res.json(orders);
 });
-app.get("/api/orders/completed", async (req, res) => {
+app.get("/odercompleted", async (req, res) => {
   const orders = await Order.find({ status: "completed" });
   res.json(orders);
 });
@@ -119,14 +119,14 @@ app.put("/api/order/confirm/:id", async (req, res) => {
 });
 
 // ✅ NEW FEATURE: Update final weight after chaki process
-app.put("/api/order/final-weight/:id", async (req, res) => {
+app.put("/apifinal/:id", async (req, res) => {
   try {
     const { finalWeight } = req.body;
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ error: "Order not found" });
 
     order.finalWeight = finalWeight;
-    order.weightDifference = finalWeight - order.initialWeight; // may be negative
+
     await order.save();
 
     res.json({
