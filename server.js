@@ -145,3 +145,4 @@ app.get("/api/sales", async (req, res) => {
     res.json(sales);
 });
 
+export default app;
