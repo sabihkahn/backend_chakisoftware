@@ -158,7 +158,7 @@ app.post("/api/sale", async (req, res) => {
     if (soldKg > inv.totalFlour)
       return res.status(400).json({ error: "Not enough flour in stock" });
 
-    const totalAmount = soldKg * 300;
+    const totalAmount = soldKg * 62;
     inv.totalFlour -= soldKg;
     inv.updatedAt = Date.now();
     await inv.save();
