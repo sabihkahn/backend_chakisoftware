@@ -30,12 +30,14 @@ const orderSchema = new mongoose.Schema({
 
 const inventorySchema = new mongoose.Schema({
   totalFlour: { type: Number, default: 0 },
+  makaiflour: { type: Number, default: 0 },
   updatedAt: { type: Date, default: Date.now },
 });
 
 const saleSchema = new mongoose.Schema({
   name: String,
   phone: String,
+  whichFlour: String,
   soldKg: Number,
   totalAmount: Number,
   date: { type: Date, default: Date.now },
@@ -179,23 +181,51 @@ app.post('/subtractflour', async (req, res) => {
 // Record sale
 app.post("/api/sale", async (req, res) => {
   try {
-    const { name, phone, soldKg } = req.body;
+    const { name, phone, soldKg, whichFlour, pricePerKg } = req.body;
+
     const inv = await Inventory.findOne();
+    if (!inv) return res.status(404).json({ error: "Inventory not found" });
 
-    if (soldKg > inv.totalFlour)
-      return res.status(400).json({ error: "Not enough flour in stock" });
+    // 🧮 Calculate total amount based on frontend-sent price
+    const totalAmount = soldKg * pricePerKg;
 
-    const totalAmount = soldKg * 62;
-    inv.totalFlour -= soldKg;
+    // 🏗 Update inventory conditionally
+    if (whichFlour.toLowerCase() === "gandum") {
+      if (soldKg > inv.totalFlour) {
+        return res.status(400).json({ error: "Not enough gandum flour in stock" });
+      }
+      inv.totalFlour -= soldKg; // subtract flour from stock
+    } else if (whichFlour.toLowerCase() === "makai") {
+      if (soldKg > inv.makaiflour) {
+        return res.status(400).json({ error: "Not enough makai flour in stock" });
+      }
+
+      inv.makaiflour -= soldKg; // subtract makai flour from stock
+    } else {
+      return res.status(400).json({ error: "Invalid flour type" });
+    }
+
     inv.updatedAt = Date.now();
     await inv.save();
 
-    await Sale.create({ name, phone, soldKg, totalAmount });
-    res.json({ message: "✅ Sale recorded successfully" });
+    // 💾 Save sale record
+    await Sale.create({
+      name,
+      phone,
+      whichFlour,
+      soldKg,
+      totalAmount,
+    });
+
+    res.json({
+      message: `✅ ${whichFlour} sale recorded successfully`,
+      totalAmount,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // Get all sales
 app.get("/api/sales", async (req, res) => {
