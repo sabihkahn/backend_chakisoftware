@@ -141,7 +141,7 @@ app.put("/apifinal/:id", async (req, res) => {
 // Get inventory info
 app.get("/api/inventory", async (req, res) => {
   const inv = await Inventory.findOne();
-  const totalValue = inv.totalFlour * 300;
+  const totalValue = inv.totalFlour * 150;
   res.json({
     totalFlour: inv.totalFlour.toFixed(2),
     totalValue: totalValue.toFixed(0),
