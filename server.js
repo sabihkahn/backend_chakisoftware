@@ -148,6 +148,33 @@ app.get("/api/inventory", async (req, res) => {
     updatedAt: inv.updatedAt,
   });
 });
+app.post('/addflour', async (req, res) => {
+  try {
+    const { addedFlour } = req.body;
+    const inv = await Inventory.findOne();
+    inv.totalFlour += addedFlour;
+    inv.updatedAt = Date.now();
+    await inv.save();
+    res.json({ message: "✅ Flour added successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+app.post('/subtractflour', async (req, res) => {
+  try {
+    const { subtractedFlour } = req.body;
+    const inv = await Inventory.findOne();
+    if (subtractedFlour > inv.totalFlour)
+      return res.status(400).json({ error: "Not enough flour in stock" });
+    inv.totalFlour -= subtractedFlour;
+    inv.updatedAt = Date.now();
+    await inv.save();
+    res.json({ message: "✅ Flour subtracted successfully" });
+  }
+  catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Record sale
 app.post("/api/sale", async (req, res) => {
